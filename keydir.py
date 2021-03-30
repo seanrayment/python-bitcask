@@ -10,8 +10,8 @@ class KeyDir:
 	def __init__(self):
 		self.items = {}
 
-	def put(self, k:, v:)
-		self.items[k] = KeyDirItem(k: k, v: v)
+	def put(self, k:, v:, offset:)
+		self.items[k] = KeyDirItem(v: v, offset:)
 
 	def get(self, k)
 		return self.items[k]
@@ -20,15 +20,16 @@ class KeyDirItem:
 	"""
 	The value type of a KeyDir entry.
 
-     _______________________________________________________
-	|     |           |          |            |     |       |
-	| CRC | timestamp | key size | value size | key | value |
-	|_____|___________|__________|____________|_____|_______|
+     _______________________________________________
+	|         |            |           |            |
+	| File ID | value size | value pos | timestamp  |
+	|_________|____________|___________|____________|
 	
 	"""
 
-	def __init__(self, k:, v:):
-		self.key = k.encode()
-		self.value = v.encode()
-		self.checksum = Checksum32.calc(self.value.encode())
+	def __init__(self, v:, offset:):
+		self.file_id = # Global active file
+		self.value = v
+		self.value_size = len(v)
+		self.offset = offset
 		self.timestamp = int(time.time())
