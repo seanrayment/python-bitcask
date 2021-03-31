@@ -1,4 +1,6 @@
 import uuid
+from bitcask_file import File
+import os
 
 class BitCask:
 	_instance = None
@@ -11,7 +13,5 @@ class BitCask:
 
 	def setup(self, dir):
 		self.dir = dir
-		self.active_file = self.new_file()
-
-	def new_file(self):
-		return str(uuid.uuid4())
+		os.makedirs(self.dir, exist_ok=True)
+		self.active_file = File(self.dir)

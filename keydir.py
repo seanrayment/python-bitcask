@@ -18,10 +18,10 @@ class KeyDirItem:
 	"""
 	The value type of a KeyDir entry.
 
-     _______________________________________________
-	|         |            |           |            |
-	| File ID | value size | value pos | timestamp  |
-	|_________|____________|___________|____________|
+     __________________________________
+	|         |            |           |
+	| File ID | value size | value pos |
+	|_________|____________|___________|
 	
 	"""
 

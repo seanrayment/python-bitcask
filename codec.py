@@ -1,4 +1,5 @@
 import struct
+from collections import namedtuple
 
 """
 simplified on-disk data representation
@@ -25,14 +26,16 @@ https://docs.python.org/3/library/struct.html
 METADATA_STRUCT = ">qq"
 METADATA_BYTE_SIZE = 16 # 2 * 8 bytes
 
+Record = namedtuple('Record', ['keysize', 'valuesize', 'key', 'value'])
+
 def encode(record):
 	# 64 bit integers
-	key_size = record["key_size"]
-	value_size = record["value_size"]
+	key_size = record.keysize
+	value_size = record.valuesize
 
 	# variable length strings
-	key = record["key"]
-	value = record["value"]
+	key = record.key
+	value = record.value
 
 	metadata = struct.pack(METADATA_STRUCT, key_size, value_size)
 	data = key.encode() + value.encode()
@@ -44,5 +47,5 @@ def decode(data):
 	string_data = data[METADATA_BYTE_SIZE:]
 	key = string_data[:ksize]
 	value = string_data[ksize:]
-	return (ksize, vsize, key, value)
+	return Record(ksize, vsize, key, value)
 
