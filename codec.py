@@ -1,7 +1,7 @@
 import struct
 
 """
-on-disk data representation
+simplified on-disk data representation
  _________________________________________________
 |           |            |           |            |
 | key size  | value size |   key     |    value   |
@@ -10,11 +10,17 @@ on-disk data representation
 """
 
 '''
-Defines the types and byte-order of the metadata in an entry
-for encoding to and decoding from binary date.
+METADATA_STRUCT defines the types and byte-order 
+of the fixed-size fields of the above record.
+
+In this simplified version, those are just the key
+size and the value size.
+
+The struct module uses this to convert to and from
+a binary encoding of the data.
 
 > -> big endian
-q -> long long (8 byte unsigned integer)
+q -> long long (8 byte integer)
 
 https://docs.python.org/3/library/struct.html
 '''
