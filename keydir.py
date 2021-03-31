@@ -17,11 +17,6 @@ class KeyDir:
 class KeyDirItem:
     """
     The value type of a KeyDir entry.
-     __________________________________
-    |         |            |           |
-    | File ID | value size | value pos |
-    |_________|____________|___________|
-
     """
 
     def __init__(self, file, v, offset, size):
