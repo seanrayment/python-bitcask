@@ -1,3 +1,5 @@
+import uuid
+
 class BitCask:
 	_instance = None
 
@@ -8,4 +10,8 @@ class BitCask:
 		return cls._instance
 
 	def setup(self, dir):
-		print(f'Initializing bitcask db in {dir}')
+		self.dir = dir
+		self.active_file = self.new_file()
+
+	def new_file(self):
+		return str(uuid.uuid4())

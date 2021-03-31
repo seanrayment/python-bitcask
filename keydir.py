@@ -1,5 +1,3 @@
-from crccheck.crc import Crc32
-from crccheck.checksum import Checksum32
 import time
 
 class KeyDir:
