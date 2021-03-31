@@ -4,8 +4,7 @@ import codec
 from collections import namedtuple
 
 """
-Class representing a single record in a bitcask file
-
+Represents a single record in a bitcask file
  _______________________________________________
 |           |            |          |           |
 | key size  | value size |   key    |   value   |
