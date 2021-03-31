@@ -39,9 +39,9 @@ class FileRecord:
 	Class representing a single record in a bitcask file
 
      _______________________________________________
-	|           |            |          |           |
-	| key size  | value size |   key    |   value   |
-	|___________|____________|__________|___________|
+    |           |            |          |           |
+    | key size  | value size |   key    |   value   |
+    |___________|____________|__________|___________|
 	
 	"""
 
