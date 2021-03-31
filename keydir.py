@@ -8,10 +8,10 @@ class KeyDir:
 	def __init__(self):
 		self.items = {}
 
-	def put(self, k:, v:, offset:)
-		self.items[k] = KeyDirItem(v: v, offset:)
+	def put(self, file, k, v, offset, size):
+		self.items[k] = KeyDirItem(file, v, offset, size)
 
-	def get(self, k)
+	def get(self, k):
 		return self.items[k]
 
 class KeyDirItem:
@@ -25,9 +25,8 @@ class KeyDirItem:
 	
 	"""
 
-	def __init__(self, v:, offset:):
-		self.file_id = # Global active file
+	def __init__(self, file, v, offset, size):
+		self.file_id = file
 		self.value = v
-		self.value_size = len(v)
-		self.offset = offset
-		self.timestamp = int(time.time())
+		self.size = size
+		self.pos = offset

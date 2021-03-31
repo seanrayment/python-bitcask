@@ -1,7 +1,18 @@
 import time
-import binascii
 import uuid
 import codec
+from collections import namedtuple
+
+"""
+Class representing a single record in a bitcask file
+
+ _______________________________________________
+|           |            |          |           |
+| key size  | value size |   key    |   value   |
+|___________|____________|__________|___________|
+
+"""
+Record = namedtuple('Record', ['keysize', 'valuesize', 'key', 'value'])
 
 class File:
 	"""
@@ -18,11 +29,14 @@ class File:
 		'''
 		keysize = len(key)
 		valuesize = len(value)
-		record = codec.Record(keysize, valuesize, key, value)
+		record = Record(keysize, valuesize, key, value)
 		data = codec.encode(record)
+		count = 0
 		with open(self.filename, 'ab') as f:
 			count = f.write(data)
+		curr_offset = self.offset
 		self.offset += count
+		return (curr_offset, count)
 
 	def read(self, pos, size):
 		'''
@@ -33,21 +47,3 @@ class File:
 			f.seek(pos, 0)
 			data = f.read(size)
 		return codec.decode(data).value
-
-class FileRecord:
-	"""
-	Class representing a single record in a bitcask file
-
-     _______________________________________________
-    |           |            |          |           |
-    | key size  | value size |   key    |   value   |
-    |___________|____________|__________|___________|
-	
-	"""
-
-	def __init__(self, k, v):
-		self.key = k
-		self.value = v
-		self.key_size = len(self.key)
-		self.value_size = len(self.value)
-

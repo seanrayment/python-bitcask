@@ -1,5 +1,5 @@
 import struct
-from collections import namedtuple
+import bitcask_file
 
 """
 simplified on-disk data representation
@@ -26,8 +26,6 @@ https://docs.python.org/3/library/struct.html
 METADATA_STRUCT = ">qq"
 METADATA_BYTE_SIZE = 16 # 2 * 8 bytes
 
-Record = namedtuple('Record', ['keysize', 'valuesize', 'key', 'value'])
-
 def encode(record):
 	# 64 bit integers
 	key_size = record.keysize
@@ -47,5 +45,5 @@ def decode(data):
 	string_data = data[METADATA_BYTE_SIZE:]
 	key = string_data[:ksize]
 	value = string_data[ksize:]
-	return Record(ksize, vsize, key, value)
+	return bitcask_file.Record(ksize, vsize, key, value)
 
