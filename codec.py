@@ -7,9 +7,7 @@ simplified on-disk data representation
 | key size  | value size |   key     |    value   |
 |___________|____________|___________|____________|
 
-"""
 
-'''
 METADATA_STRUCT defines the types and byte-order 
 of the fixed-size fields of the above record.
 
@@ -23,7 +21,7 @@ a binary encoding of the data.
 q -> long long (8 byte integer)
 
 https://docs.python.org/3/library/struct.html
-'''
+"""
 METADATA_STRUCT = ">qq"
 METADATA_BYTE_SIZE = 16 # 2 * 8 bytes
 
