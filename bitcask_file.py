@@ -11,7 +11,8 @@ Represents a single record in a bitcask file
 |___________|____________|__________|___________|
 
 """
-Record = namedtuple('Record', ['keysize', 'valuesize', 'key', 'value'])
+Record = namedtuple(
+    'Record', ['timestamp', 'keysize', 'valuesize', 'key', 'value'])
 
 
 class File:
@@ -20,9 +21,9 @@ class File:
     of key, value pairs and their associated metadata
     """
 
-    def __init__(self, dir):
-        self.filename = '/'.join([dir, str(uuid.uuid4())])
-        self.offset = 0
+    def __init__(self, dir, filename=str(uuid.uuid4()), offset=0):
+        self.filename = '/'.join([dir, filename])
+        self.offset = offset
 
     def write(self, key, value):
         """
@@ -30,14 +31,15 @@ class File:
         """
         keysize = len(key)
         valuesize = len(value)
-        record = Record(keysize, valuesize, key, value)
+        timestamp = time.time()
+        record = Record(timestamp, keysize, valuesize, key, value)
         data = codec.encode(record)
         count = 0
         with open(self.filename, 'ab') as f:
             count = f.write(data)
         curr_offset = self.offset
         self.offset += count
-        return (curr_offset, count)
+        return (timestamp, curr_offset, count)
 
     def read(self, pos, size):
         """
