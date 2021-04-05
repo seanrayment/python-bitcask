@@ -14,6 +14,9 @@ class KeyDir:
         if k in self.items:
             return self.items[k]
 
+    def delete(self, k):
+        del self.items[k]
+
 
 class KeyDirItem:
     """

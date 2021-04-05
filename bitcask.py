@@ -4,6 +4,7 @@ from keydir import KeyDir
 import codec
 import struct
 
+TOMBSTONE_VALUE = 'd49200c8-0a26-4f00-b4f0-7a9dffe0e288'
 
 class BitCask:
     _instance = None
@@ -34,14 +35,17 @@ class BitCask:
                 while(True):
                     curr_offset = file.offset
                     r = file._load_next_record()
-                    if (record):
-                        entry = self.keydir.get(record.key)
-                        if entry and record.timestamp > entry.timestamp:
+                    if (r):
+                        entry = self.keydir.get(r.key)
+                        if entry and r.timestamp > entry.timestamp and r.value != TOMBSTONE_VALUE:
                             # key exists but record we found is newer
                             size = file.offset - curr_offset
                             self.keydir.put(file.filename, r.timestamp, r.key, r.value, curr_offset, size)
-                        elif (not entry):
+                        elif entry and r.timestamp > entry.timestamp and r.value == TOMBSTONE_VALUE:
+                            self.keydir.delete(r.key)
+                        elif (not entry) and r.value != TOMBSTONE_VALUE:
                             # add new key to the keydir
+                            size = file.offset - curr_offset
                             self.keydir.put(file.filename, r.timestamp, r.key, r.value, curr_offset, size)
                     else:
                         break
@@ -55,3 +59,7 @@ class BitCask:
         entry = self.keydir.get(key)
         if entry:
             return self.filemap[entry.file_id].read(entry.pos, entry.size).decode()
+
+    def delete(self, key):
+        self.keydir.delete(key)
+        self.active_file.write(key, TOMBSTONE_VALUE)
