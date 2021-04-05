@@ -5,11 +5,10 @@ from collections import namedtuple
 
 """
 Represents a single record in a bitcask file
- _______________________________________________
-|           |            |          |           |
-| key size  | value size |   key    |   value   |
-|___________|____________|__________|___________|
-
+ _____________________________________________________________
+|             |            |            |           |         |
+|  timestamp  | key size   | value size |   key     |  value  |
+|_____________|____________|____________|___________|_________|
 """
 Record = namedtuple(
     'Record', ['timestamp', 'keysize', 'valuesize', 'key', 'value'])
