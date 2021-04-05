@@ -9,8 +9,8 @@ Keys are stored in a in-memory hash table (python dictionary). Each key maps to 
 Currently implemented features:
 - [x] PUT item
 - [x] GET item
+- [x] DELETE item
 - [x] Rebuild hash table from data files after crash
-- [ ] DELETE item
 - [ ] CRC checksums for data integrity
 - [ ] merge data files (more efficient storage)
 - [ ] Rebuild hash table faster from hint files
