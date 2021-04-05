@@ -23,34 +23,28 @@ class BitCask:
         self.populate_keys()
 
     def populate_keys(self):
+        """
+        rebuild keydir in memory from existing db by reading through every
+        file and adding keys that we've never seen or are newer than the key
+        """
         for filename in os.listdir(self.dir):
             with open(f'{self.dir}/{filename}', 'rb') as f:
-                offset = 0
-                while (True):
-                    meta_bytes = f.read(codec.METADATA_BYTE_SIZE)
-                    if meta_bytes:
-                        (timestamp, ksize, vsize) = struct.unpack(
-                            codec.METADATA_STRUCT, meta_bytes)
-                        key_bytes = f.read(ksize)
-                        value_bytes = f.read(vsize)
-                        if key_bytes and value_bytes:
-                            key = key_bytes.decode()
-                            value = value_bytes.decode()
-                            file_id = '/'.join([self.dir, filename])
-                            entry = self.keydir.get(key)
-                            if entry and timestamp > entry.timestamp:
-                                self.keydir.put(
-                                    file_id, timestamp, key, value, offset, codec.METADATA_BYTE_SIZE + ksize + vsize)
-                            elif not entry:
-                                self.keydir.put(
-                                    file_id, timestamp, key, value, offset, codec.METADATA_BYTE_SIZE + ksize + vsize)
-                            offset += codec.METADATA_BYTE_SIZE + ksize + vsize
-                        else:
-                            break
+                file = File(self.dir, filename, 0)
+                self.filemap[file.filename] = file
+                while(True):
+                    curr_offset = file.offset
+                    r = file._load_next_record()
+                    if (record):
+                        entry = self.keydir.get(record.key)
+                        if entry and record.timestamp > entry.timestamp:
+                            # key exists but record we found is newer
+                            size = file.offset - curr_offset
+                            self.keydir.put(file.filename, r.timestamp, r.key, r.value, curr_offset, size)
+                        elif (not entry):
+                            # add new key to the keydir
+                            self.keydir.put(file.filename, r.timestamp, r.key, r.value, curr_offset, size)
                     else:
                         break
-                self.filemap['/'.join([self.dir, filename])
-                             ] = File(self.dir, filename, offset)
 
     def put(self, key, value):
         (timestamp, offset, size) = self.active_file.write(key, value)
